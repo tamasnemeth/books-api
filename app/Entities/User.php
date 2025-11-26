@@ -3,7 +3,6 @@
 namespace App\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Auth\Authenticatable as AuthenticatableTrait;
 use DateTime;
@@ -14,7 +13,7 @@ use DateTime;
 #[ORM\HasLifecycleCallbacks]
 class User implements Authenticatable
 {
-    use HasApiTokens, AuthenticatableTrait;
+    use AuthenticatableTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

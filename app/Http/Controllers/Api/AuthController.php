@@ -17,26 +17,26 @@ class AuthController extends Controller
         private TokenService $tokenService
     ) {}
 
+    /**
+     * Registers a new user and returns an API token.
+     */
     public function register(Request $request)
     {
-         logger('=== REGISTER START ===');
-
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
         ]);
-        logger('Validation passed');
+
         $user = new User();
         $user->setName($request->name);
         $user->setEmail($request->email);
         $user->setPassword(Hash::make($request->password));
-            logger('User created, saving to database...');
+
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        logger('Token created successfully', ['token' => $token]);
 
         return response()->json([
             'access_token' => $token,
@@ -49,21 +49,18 @@ class AuthController extends Controller
         ], 201);
     }
 
+    /**
+     * Logs in a user and returns an API token.
+     */
     public function login(Request $request)
     {
-        logger('=== LOGIN START ===');
-
         $request->validate([
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        logger('Validation passed');
-
         $userRepository = $this->entityManager->getRepository(User::class);
         $user = $userRepository->findOneBy(['email' => $request->email]);
-
-        logger('User found: ' . ($user ? 'yes' : 'no'));
 
         if (!$user || !Hash::check($request->password, $user->getPassword())) {
             logger('Invalid credentials');
@@ -72,12 +69,8 @@ class AuthController extends Controller
             ]);
         }
 
-        logger('Password check passed, creating token...');
-
         try {
-            // Használd a TokenService-t, NE a $user->createToken()-t!
             $token = $this->tokenService->createToken($user, 'auth_token');
-            logger('Token created successfully');
         } catch (\Exception $e) {
             logger('ERROR creating token: ' . $e->getMessage());
             logger('Trace: ' . $e->getTraceAsString());
@@ -95,6 +88,9 @@ class AuthController extends Controller
         ]);
     }
 
+    /**
+     * Logs out the authenticated user by revoking the current token.
+     */
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();

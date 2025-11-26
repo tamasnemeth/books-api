@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-// use App\Entities\Book;
-// use App\Entities\Author;
 use App\Entities\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
-// use DateTime;
 
 class CategoryController extends Controller
 {
@@ -17,6 +14,10 @@ class CategoryController extends Controller
         private BookController $bookController
     ) {}
 
+    /**
+     * GET /api/categories
+     * Returns a list of all categories.
+     */
     public function index()
     {
         $categories = $this->entityManager->getRepository(Category::class)->findAll();
@@ -26,6 +27,10 @@ class CategoryController extends Controller
         );
     }
 
+    /**
+     * POST /api/categories
+     * Creates a new category.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -40,6 +45,10 @@ class CategoryController extends Controller
         return response()->json($this->formatCategory($category), 201);
     }
 
+    /**
+     * GET /api/categories/{id}
+     * Returns details of a specific category.
+     */
     public function show(int $id)
     {
         $category = $this->entityManager->find(Category::class, $id);
@@ -51,6 +60,10 @@ class CategoryController extends Controller
         return response()->json($this->formatCategory($category));
     }
 
+    /**
+     * PUT /api/categories/{id}
+     * Updates an existing category.
+     */
     public function update(Request $request, int $id)
     {
         $category = $this->entityManager->find(Category::class, $id);
@@ -71,6 +84,10 @@ class CategoryController extends Controller
         return response()->json($this->formatCategory($category));
     }
 
+    /**
+     * DELETE /api/categories/{id}
+     * Deletes a specific category.
+     */
     public function destroy(int $id)
     {
         $category = $this->entityManager->find(Category::class, $id);
@@ -85,6 +102,9 @@ class CategoryController extends Controller
         return response()->json(['message' => 'Category deleted successfully']);
     }
 
+    /**
+     * Formats a Category entity into an array.
+     */
     private function formatCategory(Category $category): array
     {
         return [

@@ -18,6 +18,10 @@ class BookController extends Controller
         private CurrencyService $currencyService
     ) {}
 
+    /**
+     * GET /api/books
+     * Returns a list of all books.
+     */
     public function index()
     {
         $books = $this->entityManager->getRepository(Book::class)->findAll();
@@ -27,11 +31,12 @@ class BookController extends Controller
         );
     }
 
+    /**
+     * POST /api/books
+     * Creates a new book.
+     */
     public function store(Request $request)
     {
-        logger('=== BOOK STORE START ===');
-        logger('Request data:', $request->all());
-        logger('Headers:', $request->headers->all());
         $request->validate([
             'title' => 'required|string|max:255',
             'author_id' => 'required|integer|exists:authors,id',
@@ -39,11 +44,9 @@ class BookController extends Controller
             'release_date' => 'required|date',
             'price_huf' => 'required|numeric|min:0',
         ]);
-        logger('Validation passed in BookController@store');
 
         $author = $this->entityManager->find(Author::class, $request->author_id);
         $category = $this->entityManager->find(Category::class, $request->category_id);
-        logger('Author and Category found', ['author_id' => $request->author_id, 'category_id' => $request->category_id]);
 
         $book = new Book();
         $book->setTitle($request->title);
@@ -52,16 +55,16 @@ class BookController extends Controller
         $book->setReleaseDate(new DateTime($request->release_date));
         $book->setPriceHuf($request->price_huf);
 
-        logger('Book entity populated, saving to database...');
-
         $this->entityManager->persist($book);
         $this->entityManager->flush();
-
-        logger('Book saved to database with ID: ' . $book->getId());
 
         return response()->json($this->formatBook($book), 201);
     }
 
+    /**
+     * GET /api/books/{id}
+     * Returns details of a specific book.
+     */
     public function show(int $id)
     {
         $book = $this->entityManager->find(Book::class, $id);
@@ -73,6 +76,10 @@ class BookController extends Controller
         return response()->json($this->formatBook($book));
     }
 
+    /**
+     * PUT /api/books/{id}
+     * Updates an existing book.
+     */
     public function update(Request $request, int $id)
     {
         $book = $this->entityManager->find(Book::class, $id);
@@ -116,6 +123,10 @@ class BookController extends Controller
         return response()->json($this->formatBook($book));
     }
 
+    /**
+     * DELETE /api/books/{id}
+     * Deletes a specific book.
+     */
     public function destroy(int $id)
     {
         $book = $this->entityManager->find(Book::class, $id);
@@ -130,6 +141,10 @@ class BookController extends Controller
         return response()->json(['message' => 'Book deleted successfully']);
     }
 
+    /**
+     * GET /api/books/search
+     * Searches for books by title, author name, or category name.
+     */
     public function search(Request $request)
     {
         $query = $request->input('query');
@@ -162,7 +177,9 @@ class BookController extends Controller
         ]);
     }
 
-
+    /**
+     * Formats a Book entity into an array.
+     */
     public function formatBook(Book $book): array
     {
         $prices = $this->currencyService->formatPrice($book->getPriceHuf());

@@ -14,6 +14,9 @@ class TokenService
         private EntityManagerInterface $entityManager
     ) {}
 
+    /**
+     * Creates a new API token for the given user.
+     */
     public function createToken(User $user, string $name = 'auth_token', ?DateTime $expiresAt = null): string
     {
         $plainToken = Str::random(80);
@@ -30,6 +33,9 @@ class TokenService
         return $plainToken;
     }
 
+    /**
+     * Finds a user by the given API token.
+     */
     public function findUserByToken(string $plainToken): ?User
     {
         $hashedToken = hash('sha256', $plainToken);
@@ -47,6 +53,9 @@ class TokenService
         return $apiToken->getUser();
     }
 
+    /**
+     * Revokes the given API token.
+     */
     public function revokeToken(string $plainToken): bool
     {
         $hashedToken = hash('sha256', $plainToken);
@@ -64,6 +73,9 @@ class TokenService
         return true;
     }
 
+    /**
+     * Revokes all tokens for the given user.
+     */
     public function revokeAllTokens(User $user): void
     {
         $tokenRepository = $this->entityManager->getRepository(ApiToken::class);

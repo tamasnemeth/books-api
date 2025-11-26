@@ -3,11 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Entities\Book;
-use App\Entities\Category;
 use App\Services\CurrencyService;
 use Doctrine\ORM\EntityManagerInterface;
-use Illuminate\Http\Request;
 
 class StatisticsController extends Controller
 {
@@ -35,7 +32,6 @@ class StatisticsController extends Controller
 
         $books = $query->getResult();
 
-        // Átlagár lekérdezése a response-hoz
         $avgPriceQuery = $this->entityManager->createQuery(
             'SELECT AVG(b.priceHuf) as avgPrice FROM App\Entities\Book b'
         );

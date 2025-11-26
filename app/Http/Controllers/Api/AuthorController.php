@@ -3,12 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-// use App\Entities\Book;
 use App\Entities\Author;
-// use App\Entities\Category;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
-// use DateTime;
 
 class AuthorController extends Controller
 {
@@ -17,6 +14,10 @@ class AuthorController extends Controller
         private BookController $bookController
     ) {}
 
+    /**
+     * GET /api/authors
+     * Returns a list of all authors.
+     */
     public function index()
     {
         $authors = $this->entityManager->getRepository(Author::class)->findAll();
@@ -26,6 +27,10 @@ class AuthorController extends Controller
         );
     }
 
+    /**
+     * POST /api/authors
+     * Creates a new author.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -41,6 +46,10 @@ class AuthorController extends Controller
         return response()->json($this->formatAuthor($author), 201);
     }
 
+    /**
+     * GET /api/authors/{id}
+     * Returns details of a specific author.
+     */
     public function show(int $id)
     {
         $author = $this->entityManager->find(Author::class, $id);
@@ -52,6 +61,10 @@ class AuthorController extends Controller
         return response()->json($this->formatAuthor($author));
     }
 
+    /**
+     * PUT /api/authors/{id}
+     * Updates an existing author.
+     */
     public function update(Request $request, int $id)
     {
         $author = $this->entityManager->find(Author::class, $id);
@@ -72,6 +85,10 @@ class AuthorController extends Controller
         return response()->json($this->formatAuthor($author));
     }
 
+    /**
+     * DELETE /api/authors/{id}
+     * Deletes an author.
+     */
     public function destroy(int $id)
     {
         $author = $this->entityManager->find(Author::class, $id);
@@ -86,6 +103,9 @@ class AuthorController extends Controller
         return response()->json(['message' => 'Author deleted successfully']);
     }
 
+    /**
+     * Formats an Author entity into an array.
+     */
     private function formatAuthor(Author $author): array
     {
         return [
