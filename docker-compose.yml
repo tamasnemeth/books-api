@@ -1,0 +1,55 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: books_app
+    restart: unless-stopped
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - books_network
+    depends_on:
+      - db
+
+  webserver:
+    image: httpd:2.4
+    container_name: books_webserver
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker/apache/books.conf:/usr/local/apache2/conf/extra/books.conf
+      - ./docker/apache/httpd.conf:/usr/local/apache2/conf/httpd.conf
+    networks:
+      - books_network
+    depends_on:
+      - app
+    extra_hosts:
+      - "books.local:127.0.0.1"
+
+  db:
+    image: mysql:8.0
+    container_name: books_db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: books
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: books_user
+      MYSQL_PASSWORD: books_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - books_network
+
+networks:
+  books_network:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
