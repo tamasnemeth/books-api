@@ -2,18 +2,24 @@
 
 ## Install
 
-Setup and run docker container & seeding database
+1. Create your .env file based on the .env.example file.
 
 ```bash
-./setup.sh
+.env
 ```
-    
-On your development machine, add this to the `/etc/hosts` file (Linux/Mac) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
+
+2. On your development machine, add this to the `/etc/hosts` file (Linux/Mac) or `C:\Windows\System32\drivers\etc\hosts` (Windows):
 
 ```bash
 127.0.0.1 books.local
 ```
 
+3. Setup and run docker container & seeding database
+
+```bash
+./setup.sh
+```
+    
 Reset database
 ```bash
 ./reset.sh
