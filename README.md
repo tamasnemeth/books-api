@@ -2,23 +2,22 @@
 
 ## Install
 
-Create Docker container
+Setup and run docker container & seeding database
 
 ```bash
-docker-compose up -d      
+./setup.sh
 ```
     
+Reset database
+```bash
+./reset.sh
+```
+
 Enter the container
 
 ```bash
 docker exec -it books_app bash
 ```
-
-Create database tables
-```bash
-php artisan doctrine:schema:create
-```
-
 
 ## Testing api endpoints
 
@@ -54,7 +53,7 @@ Create new author
 
 ```bash
 curl -X POST http://books.local:8080/api/authors \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "George R.R. Martin"
@@ -65,7 +64,7 @@ Edit author
 
 ```bash
 curl -X PUT http://books.local:8080/api/authors/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "George R.R. Martin"
@@ -76,14 +75,14 @@ Get all author
 
 ```bash
 curl -X GET http://books.local:8080/api/authors \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Get author
 
 ```bash
 curl -X GET http://books.local:8080/api/authors/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 ### Categories
@@ -92,7 +91,7 @@ Create new category
 
 ```bash
 curl -X POST http://books.local:8080/api/categories \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Fantasy"
@@ -103,7 +102,7 @@ Edit category
 
 ```bash
 curl -X PUT http://books.local:8080/api/categories/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Thriller"
@@ -114,21 +113,21 @@ Delete category
 
 ```bash
 curl -X DELETE http://books.local:8080/api/categories/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Get all categories
 
 ```bash
 curl -X GET http://books.local:8080/api/categories \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Get category
 
 ```bash
 curl -X GET http://books.local:8080/api/categories/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 ### Books
@@ -137,7 +136,7 @@ Create book
 
 ```bash
 curl -X POST http://books.local:8080/api/books \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Test Book",
@@ -151,7 +150,7 @@ curl -X POST http://books.local:8080/api/books \
 Update a book
 ```bash
 curl -X PUT http://books.local:8080/api/books/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA" \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Harry Potter és a Bölcsek Köve",
@@ -163,28 +162,28 @@ Get all books
 
 ```bash
 curl -X GET http://books.local:8080/api/books \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Get a book
 
 ```bash
 curl -X GET http://books.local:8080/api/books/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Delete book
 
 ```bash
 curl -X DELETE http://books.local:8080/api/books/1 \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 Search
 
 ```bash
 curl -X GET "http://books.local:8080/api/books/search?query=asimov" \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 
@@ -194,7 +193,7 @@ Returns a list of books with prices above the average price.
 
 ```bash
 curl -X GET http://books.local:8080/api/statistics/expensive-books \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 
@@ -202,7 +201,7 @@ Returns the names of the three most popular categories and their average prices.
 
 ```bash
 curl -X GET http://books.local:8080/api/statistics/popular-categories \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
 
@@ -210,5 +209,5 @@ Returns the top three most expensive books in the Fantasy and Science Fiction ca
 
 ```bash
 curl -X GET http://books.local:8080/api/statistics/top-fantasy-and-sci-fi \
-  -H "Authorization: Bearer rQquCPLyPLXLunDZBqYbrI4uxtqqWwqF9RzwlsQITQ9AnGe2O6UPlMWWfuxE2pbR4RRrCoy9mpuLRXuA"
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
